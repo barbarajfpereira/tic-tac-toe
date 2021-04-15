@@ -1,9 +1,10 @@
 import './App.css';
+import BoardGame from './components/BoardGame';
 
 function App() {
   return (
     <div className='App'>
-      <p>the app goes here</p>
+      <BoardGame />
     </div>
   );
 }
