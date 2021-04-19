@@ -92,7 +92,30 @@ This method is called when a component is being removed from the DOM:
 
 # Other hooks
 
-- useContext
-  - lets you subscribe to React context without introducing nesting
-- useReducer
-  - lets you manage local state of complex components with a reducer
+## useContext
+
+Lets you subscribe to React context without introducing nesting.
+
+The current context value is determined by the value prop of the nearest <MyContext.Provider> above the calling component in the tree. When the nearest <MyContext.Provider> above the component updates, this Hook will trigger a rerender with the latest context value passed to that MyContext provider.
+
+```js
+const value = useContext(MyContext);
+```
+
+## useReducer
+
+Lets you manage local state of complex components with a reducer.
+
+```js
+const [state, dispatch] = useReducer(reducer, initialArg, init);
+```
+
+## useCallback
+
+Pass an inline callback and an array of dependencies. useCallback will return a memoized version of the callback that only changes if one of the dependencies has changed.
+
+```js
+const memoizedCallback = useCallback(() => {
+  doSomething(a, b);
+}, [a, b]);
+```

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import Board from './Board';
 
-const calculateWinner = (squares) => {
+const isWinner = (squares) => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -20,71 +21,42 @@ const calculateWinner = (squares) => {
   return null;
 };
 
-const Square = ({ value, onClick }) => (
-  <button className='square' onClick={onClick}>
-    {value}
-  </button>
-);
+const Game = () => {
+  const initialBoard = Array(9).fill(null);
 
-const Board = () => {
-  const [value, setValue] = useState(Array(9).fill(null));
-  const [xIsNext, setNext] = useState(true);
+  const [isXNext, setIsXNext] = useState(true);
+  const [movesHistory, setHistory] = useState([initialBoard]);
 
-  const handleClick = (i) => {
-    const values = value.slice();
+  const currentMove = movesHistory[movesHistory.length - 1];
 
-    if (calculateWinner(values) || values[i]) {
-      return;
-    }
-    values[i] = xIsNext ? 'X' : 'O';
-
-    setValue(values);
-    setNext(!xIsNext);
-  };
-
-  const renderSquare = (i) => {
-    return <Square value={value[i]} onClick={() => handleClick(i)} />;
-  };
-
-  const winner = calculateWinner(value);
+  const winner = isWinner(currentMove);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
   } else {
-    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+    status = 'Next player: ' + (isXNext ? 'X' : 'O');
   }
 
-  return (
-    <div>
-      <div className='status'>{status}</div>
-      <div className='board-row'>
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-      </div>
-      <div className='board-row'>
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div className='board-row'>
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-    </div>
-  );
-};
+  const handleClick = (squareIndex) => {
+    const currentSquare = [...currentMove];
 
-const Game = ({ status, moves }) => {
+    if (isWinner(currentSquare) || currentSquare[squareIndex]) {
+      return;
+    }
+    currentSquare[squareIndex] = isXNext ? 'X' : 'O';
+
+    setHistory([...movesHistory, currentSquare]);
+    setIsXNext(!isXNext);
+  };
+
   return (
     <div className='game'>
-      <div className='game-board'>
-        <Board />
+      <div>
+        <Board boardState={currentMove} onClick={handleClick} />
       </div>
       <div className='game-info'>
         <div>{status}</div>
-        <ol>{moves}</ol>
+        {/* <ol>{moves}</ol> */}
       </div>
     </div>
   );
